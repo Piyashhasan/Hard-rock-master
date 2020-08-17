@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Hard Rock Solution - Song Lyric App</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Custom css -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container" id="form">
+        <nav class="navbar  navbar-dark my-3">
+            <a class="navbar-brand" href="#">
+                <img src="images/logo.png" alt="Hard Rock Solution">
+            </a>
+            <button  class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+                <img src="images/toggler-icon.svg" alt="">
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavId">
+                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownId">
+                            <a class="dropdown-item" href="#">Action 1</a>
+                            <a class="dropdown-item" href="#">Action 2</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content-area">
+            <div class="search-bar col-md-6 mx-auto">
+                <h1 class="text-center">Lyrics Search</h1>
+                <div class="search-box my-5">
+                    <form id="form" action="">
+                        <input id="search" type="text" class="form-control" placeholder="Enter your artist song name">
+                        <button id="button" class="btn btn-success search-btn">Search</button>
+                    </form>
+                  
+                </div>
+            </div>
+            <!-- === Simple results === -->
+            <div class="d-flex justify-content-center">
+                <div class="" id="result">
+                </div>
+            </div>
+           
+            <!-- === Fancy results === -->
+            <div class="search-result col-md-8 mx-auto py-4">
+                <!-- single result -->
+                <div class="single-result row align-items-center my-3 p-3">
+                    <div class="col-md-9">
+                        <h3 class="lyrics-name">Purple Noon</h3>
+                        <p class="author lead">Album by <span>Washed Out</span></p>
+                    </div>
+                    <div class="col-md-3 text-md-right text-center">
+                        <button class="btn btn-success">Get Lyrics</button>
+                    </div>
+                </div>
+                <!-- ./ single result -->
+
+                <!-- single result -->
+                <div class="single-result row align-items-center my-3 p-3">
+                    <div class="col-md-9">
+                        <h3 class="lyrics-name">Purple Noon</h3>
+                        <p class="author lead">Album by <span>Washed Out</span></p>
+                    </div>
+                    <div class="col-md-3 text-md-right text-center">
+                        <button class="btn btn-success">Get Lyrics</button>
+                    </div>
+                </div>
+                <!-- ./ single result -->
+                <!-- single result -->
+                <div class="single-result row align-items-center my-3 p-3">
+                    <div class="col-md-9">
+                        <h3 class="lyrics-name">Purple Noon</h3>
+                        <p class="author lead">Album by <span>Washed Out</span></p>
+                    </div>
+                    <div class="col-md-3 text-md-right text-center">
+                        <button class="btn btn-success">Get Lyrics</button>
+                    </div>
+                </div>
+                <!-- ./ single result -->
+                <!-- single result -->
+                <div class="single-result row align-items-center my-3 p-3">
+                    <div class="col-md-9">
+                        <h3 class="lyrics-name">Purple Noon</h3>
+                        <p class="author lead">Album by <span>Washed Out</span></p>
+                    </div>
+                    <div class="col-md-3 text-md-right text-center">
+                        <button class="btn btn-success">Get Lyrics</button>
+                    </div>
+                </div>
+                <!-- ./ single result -->
+            </div>
+        </main>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Custom Script Here -->
+    <script>
+        const form = document.getElementById("form");
+        const search = document.getElementById("search");
+        const result = document.getElementById("result");
+
+        const apiURL = 'https://api.lyrics.ovh';
+
+        // search song by artist
+        function searchSongs(term){
+            fetch(`${apiURL}/suggest/${term}`)
+            .then(res => res.json())
+            .then(data => {
+                showData(data);
+            }) 
+        }
+
+        //get lyrics for songs
+        function getLyrics(artist, songTitle){
+            fetch(`${apiURL}/v1/${artist}/${songTitle}`)
+            .then(res => res.json())
+            .then(data => {
+                const lyrics = data.lyrics.replace(/(\r\n|\r|\n)/g, '<br>');
+                result.innerHTML = `<h2><strong>${artist}</strong> - ${songTitle}</h2>
+                <span>${lyrics}</span>`
+            }) 
+        }
+
+        // show songs searching by artist
+        function showData(data){
+            
+            result.innerHTML = 
+            `<ul class="songs">
+                ${data.data.map(song => 
+                `<li>
+                    <span><strong>${song.artist.name}</strong> - ${song.title} </span>
+                    <button class="btn btn-success hero" data-artist="${song.artist.name}" data-songtitle="${song.title}">Get lyrics </button>
+                </li>`)
+                }  
+                </ul>`;
+        }
+
+        // get lyrics button click
+
+        result.addEventListener("click", e =>{
+            const clickedEl = e.target;
+
+            if(clickedEl.tagName === 'BUTTON'){
+                const artist = clickedEl.getAttribute('data-artist');
+                const songTitle = clickedEl.getAttribute('data-songtitle');
+                getLyrics(artist, songTitle);
+            }
+        })
+
+        // add event listener
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            let searchTerm = search.value.trim();
+
+            if(!searchTerm){
+                alert("Please type again");
+            }
+            else{
+                searchSongs(searchTerm);
+            }
+        })
+
+
+    </script>
+
+</body>
+
+</html>
